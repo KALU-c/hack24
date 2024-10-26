@@ -32,6 +32,14 @@ export class SmsController {
   async getAllMessages(
     @Body('apiKey') apiKey: string
   ) {
+     return this.smsService.GetAllMessages(apiKey);
+  }
+
+  @Get('subscribe-users')
+  @HttpCode(HttpStatus.OK)
+  async subscribeUsers(
+    @Body('apiKey') apiKey: string
+  ) {
      return this.smsService.SubscribeUser(apiKey);
   }
 

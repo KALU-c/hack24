@@ -43,7 +43,6 @@ export class SmsService {
     }
   }
 
-
   async sendMultipleSms(apiKey: string, data: MultipleSmsType[], campaign_id: string): Promise<any> {
     try {
       const url = `${this.bulkSms}?API_KEY=${apiKey}`;
@@ -73,12 +72,10 @@ export class SmsService {
 
   async SubscribeUser(apiKey: string): Promise<any> {
     try {
-      const url = `${this.allMessages}?API_KEY=${apiKey}`;
-
-      const response = await axios.get(url);
+      const allMessages = await this.GetAllMessages(apiKey);
 
       await Promise.all(
-        response.data.received_messages.map(async (item: { message: string; sent_from: any }) => {
+        allMessages.received_messages.map(async (item: { message: string; sent_from: any }) => {
           if (item.message.toLocaleLowerCase() === "okk") {
             // Check if the 'sent_from' already exists
             const existingRecord = await this.prisma.contactGroup.findUnique({
@@ -91,7 +88,7 @@ export class SmsService {
             if (!existingRecord) {
               await this.prisma.contactGroup.create({
                 data: {
-                  groupId: "1",
+                  groupId: "cm2qdyw4d000c3hnymn48z76c",
                   address: item.sent_from,
                 },
               });
@@ -101,6 +98,22 @@ export class SmsService {
       );      
       
 
+
+      return ;
+    } catch (error) {
+      console.error('Error sending SMS:', error.response?.data || error.message);
+      throw new HttpException(
+        error.response?.data || 'Failed to send SMS',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async GetAllMessages(apiKey): Promise<any> {
+    try {
+      const url = `${this.allMessages}?API_KEY=${apiKey}`;
+
+      const response = await axios.get(url);
 
       return response.data;
     } catch (error) {
