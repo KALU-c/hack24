@@ -154,19 +154,19 @@ export class SmsService {
 
   async CreateGroup(name: string): Promise<any> {
     try {
-      const existingGroup = await this.prisma.group.findMany({
-        where: {
-          name: name
-        }
-      });
+      // const existingGroup = await this.prisma.group.findMany({
+      //   where: {
+      //     name: name
+      //   }
+      // });
 
-      if(!existingGroup) {
+      // if(!existingGroup) {
         await this.prisma.group.create({
           data: {
             name: name
           }
         })
-      };
+      // };
 
       return { message: "Group Created!" }
     } catch(error) {
